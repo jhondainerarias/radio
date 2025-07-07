@@ -1,0 +1,750 @@
+/* style.css */
+
+/* --- 1. Variables CSS para colores y tipografía --- */
+:root {
+    --primary-color: #007bff; /* Azul vibrante */
+    --secondary-color: #6c757d; /* Gris para textos secundarios/bordes */
+    --accent-color: #28a745; /* Verde para acciones importantes (Play, Add) */
+    --background-color: #f8f9fa; /* Fondo claro de la página */
+    --card-background: #ffffff; /* Fondo blanco para las secciones/tarjetas */
+    --border-color: #dee2e6; /* Color de borde general */
+    --text-color: #343a40; /* Texto principal oscuro */
+    --light-text-color: #6c757d; /* Texto más claro */
+    --highlight-color: #ffe0b2; /* Para elementos activos o seleccionados */
+    --error-color: #dc3545; /* Rojo para errores o advertencias */
+    --danger-color: #dc3545; /* Rojo para botones de "Stop" */
+
+    --font-family-sans: 'Roboto', sans-serif; /* Usaremos Roboto, importada de Google Fonts */
+    --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+
+/* Importar fuente Roboto de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+/* --- 2. Reset básico y estilos generales --- */
+body {
+    font-family: var(--font-family-sans);
+    margin: 20;
+    padding: 0;
+    line-height: 1.6;
+    color: var(--text-color);
+
+    /* Imagen de fondo fija para todo el contenido */
+    background-image: url('imagen/1.jpg'); /* Asegúrate de que esta ruta sea correcta */
+    background-size: cover; /* Escala la imagen para cubrir todo el body */
+    background-position: center center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+
+    display: flex;
+    justify-content: center; /* Centra el `radio-container` horizontalmente */
+    align-items: flex-start; /* Alinea el `radio-container` al inicio verticalmente */
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana */
+    padding: 20px; /* Espacio alrededor del contenedor principal */
+    box-sizing: border-box; /* Incluye padding y borde en el ancho/alto */
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* --- 3. Contenedor principal de la radio --- */
+.radio-container {
+    background-color: var(--card-background); /* Fondo blanco para el contenedor principal */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo para pantallas grandes */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Asegura que nada se desborde del contenedor principal */
+    padding: 30px;
+}
+
+/* --- 4. Banner deslizante --- */
+.scrolling-banner {
+    width: 100%;
+    /* Fondo semitransparente para que se vea la imagen de fondo del body */
+    background-color: rgba(250, 249, 248, 0.7); /* Naranja semi-transparente */
+    color: rgb(1, 0, 10); /* Texto blanco para contrastar */
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    margin-bottom: 20px; /* Espacio debajo del banner */
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.scrolling-text {
+    display: inline-block;
+    padding-left: 100%; /* El texto comienza fuera de la pantalla a la derecha */
+    animation: scroll-left 20s linear infinite; /* Velocidad ajustada para texto más largo */
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* --- 5. Encabezado de la radio --- */
+.radio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+    /* Fondo transparente para que se vea la imagen del body */
+    background-color: transparent; /* O puedes usar rgba(0,0,0,0.3) para un ligero tinte */
+    color: var(--text-color); /* Color de texto que contraste con el fondo */
+}
+
+.radio-header h1 {
+    margin: 0;
+    font-size: 2.5em; /* Tamaño de fuente más grande para el título */
+    color: var(--primary-color); /* Color azul vibrante */
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre el texto y el icono */
+}
+
+.radio-header h1 i {
+    font-size: 0.9em; /* Ajusta el tamaño del icono */
+    color: var(--accent-color); /* Color verde para el icono */
+}
+
+.radio-header .current-time {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--light-text-color);
+    background-color:#c5e2f5; /* Fondo ligero para la hora */
+    padding: 8px 15px;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* --- 6. Diseño principal con Grid --- */
+.radio-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Reproductor y lista a la izquierda (2 partes), publicidad/hora a la derecha (1 parte) */
+    gap: 20px; /* Espacio entre las columnas */
+}
+
+/* Secciones generales */
+section {
+    background-color:url(imagen/1.jpg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px; /* Bordes más suaves */
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra suave */
+}
+
+section h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.8em; /* Títulos de sección más grandes */
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* --- 7. Sección del Reproductor Principal --- */
+.player-section {
+    grid-column: 1 / 2; /* Ocupa la primera columna */
+}
+
+.player-display {
+    text-align: center;
+    margin-bottom: 25px;
+    background-color: #acf2f5; /* Fondo ligeramente más oscuro para el display */
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#nowPlaying {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0 0 15px 0;
+}
+
+.progress-bar-container {
+    background-color: var(--border-color);
+    border-radius: 5px;
+    height: 15px; /* Barra de progreso un poco más alta */
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+#mainProgressBar {
+    background-color: var(--primary-color);
+    height: 100%;
+    width: 0%; /* Controlado por JS */
+    border-radius: 5px;
+    transition: width 0.1s linear; /* Suaviza el movimiento de la barra */
+}
+
+.controls { /* Renombrado de .player-controls a .controls para claridad */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px; /* Espacio sobre los controles */
+}
+
+.controls .btn {
+    padding: 12px 25px;
+    font-size: 1.1em;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px; /* Espacio sobre el control de volumen */
+    justify-content: center;
+}
+
+.volume-control label {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.volume-control input[type="range"] {
+    width: 150px; /* Ancho del slider de volumen */
+    height: 10px;
+    -webkit-appearance: none;
+    background: var(--border-color);
+    border-radius: 5px;
+    outline: none;
+    cursor: grab;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; /* Tamaño del thumb */
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 3px solid var(--card-background); /* Borde blanco para el thumb */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb:hover {
+    background: darken(var(--primary-color), 10%); /* Hover effect */
+}
+
+.volume-control input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 3px solid var(--card-background);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+}
+.volume-control input[type="range"]::-moz-range-thumb:hover {
+    background: darken(var(--primary-color), 10%); /* Hover effect */
+}
+
+
+#mainAudioPlayer {
+    display: none; /* Ocultar el reproductor nativo */
+}
+
+#youtubePlayerContainer {
+    /* YouTube iframe se oculta con JS al inicializar */
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    position: absolute;
+}
+
+/* --- 8. Sección de Lista de Reproducción --- */
+.playlist-section {
+    grid-column: 1 / 2; /* Ocupa la primera columna, debajo del reproductor */
+    margin-top: 30px; /* Espacio entre secciones */
+}
+
+.playlist-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra los controles */
+}
+
+.playlist-controls .btn {
+    flex-grow: 1;
+    max-width: 220px; /* Ancho máximo para botones de playlist */
+}
+
+.playlist-controls .input-text {
+    flex-grow: 2;
+    padding: 12px 15px; /* Más padding para inputs */
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* Bordes más redondeados */
+    font-size: 1em;
+    max-width: 350px;
+}
+
+.playlist-items {
+    max-height: 350px; /* Altura máxima para la lista con scroll */
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: #fdfdfd;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.playlist-items li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px; /* Más padding para los ítems */
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.playlist-items li:last-child {
+    border-bottom: none;
+}
+
+.playlist-items li:hover {
+    background-color: var(--background-color);
+    transform: translateY(-2px);
+}
+
+.playlist-items li.active {
+    background-color: var(--highlight-color);
+    font-weight: bold;
+    color: var(--text-color);
+    box-shadow: inset 3px 0 0 var(--primary-color); /* Borde izquierdo para activo */
+}
+
+.playlist-items .remove-item-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 1.2em; /* Icono de remover más grande */
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.playlist-items .remove-item-btn:hover {
+    color: var(--error-color);
+    transform: scale(1.1);
+}
+
+.playlist-items .placeholder-item {
+    font-style: italic;
+    color: var(--light-text-color);
+    text-align: center;
+    padding: 30px;
+}
+
+
+/* --- 9. Sección de Publicidad y Hora (columna derecha) --- */
+.ads-time-section {
+    grid-column: 2 / 3; /* Ocupa la segunda columna */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.ad-controls,
+.time-controls {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.ad-controls h3,
+.time-controls h3 {
+    margin-top: 0;
+    color:#df890a;
+    font-size: 1.5em; /* Títulos de subsección */
+    margin-bottom: 15px;
+    border-bottom: 1px dotted var(--border-color);
+    padding-bottom: 8px;
+}
+
+.ad-controls .btn,
+.time-controls .btn {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.ad-controls .input-text,
+.ad-settings input[type="number"],
+.time-settings input[type="number"] {
+    width: calc(100% - 24px); /* Ancho completo menos padding */
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.ad-items {
+    max-height: 180px; /* Altura para la lista de ads */
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: #eff5b8;
+    margin-top: 15px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ad-items li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ad-items li:last-child {
+    border-bottom: none;
+}
+
+.ad-items .remove-item-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.ad-items .remove-item-btn:hover {
+    color: var(--error-color);
+    transform: scale(1.1);
+}
+
+.ad-settings, .time-settings {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between; /* Distribuye elementos uniformemente */
+}
+
+.ad-settings label, .time-settings label {
+    font-weight: bold;
+    color: var(--text-color);
+    white-space: nowrap; /* Evita que el texto de la label se rompa */
+}
+
+.ad-settings input[type="number"], .time-settings input[type="number"] {
+    flex-grow: 1;
+    max-width: 90px; /* Ancho fijo para inputs numéricos */
+    text-align: center;
+}
+
+.ad-settings .btn, .time-settings .btn {
+    flex-grow: 1;
+    max-width: 140px; /* Ancho fijo para botones de toggle */
+}
+
+/* --- 10. Botones generales --- */
+.btn {
+    padding: 12px 25px; /* Más padding para botones */
+    border: none;
+    border-radius: 8px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre icono y texto */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra más pronunciada */
+}
+
+.btn.primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn.primary:hover {
+    background-color: #218838; /* Tono más oscuro de verde */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.btn.secondary {
+    background-color:#f7e705a4
+    color white;
+}
+
+.btn.secondary:hover {
+    background-color: #1583d8; /* Tono más oscuro de gris */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.btn.danger { /* Nuevo estilo para el botón de Stop */
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn.danger:hover {
+    background-color: #bb2d3b; /* Tono más oscuro de rojo */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Input de texto */
+.input-text {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-text:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Iconos de Font Awesome */
+.fas, .fab {
+    margin-right: 5px; /* Espacio entre el icono y el texto */
+}
+
+/* --- 11. Ecualizador Gráfico --- */
+.equalizer-section {
+    background-color: #00040528; /* Un gris oscuro */
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px; /* Espacio sobre el ecualizador */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.equalizer-section h2 {
+    color: #000000; /* Color de texto claro */
+    margin-bottom: 25px;
+    border-bottom-color: #066eec; /* Borde inferior más oscuro */
+}
+
+.equalizer-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    gap: 15px; /* Mayor espacio entre sliders */
+    flex-wrap: wrap;
+}
+
+.eq-band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30px; /* Ancho fijo para cada banda */
+}
+
+.eq-band label {
+    color: #000000;
+    font-size: 0.9em;
+    margin-top: 8px; /* Espacio entre slider y label */
+    text-align: center;
+    width: 50%;
+}
+
+.eq-band input[type="range"] {
+    -webkit-appearance: slider-vertical;
+    writing-mode: bt-lr;
+    direction: rtl;
+    width: 25px; /* Ancho del slider */
+    height: 140px; /* Altura del slider */
+    background: #345e44; /* Fondo de la pista del slider */
+    border-radius: 8px;
+    outline: none;
+    transition: background-color .2s;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.eq-band input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px; /* Ancho del "pulgar" */
+    height: 18px; /* Altura del "pulgar" */
+    background: #c1d600; /* Color del pulgar */
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: background-color 0.2s ease;
+}
+.eq-band input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ec2501;
+}
+
+.eq-band input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 18px;
+    background: #3498db;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: background-color 0.2s ease;
+}
+.eq-band input[type="range"]::-moz-range-thumb:hover {
+    background: #2980b9;
+}
+
+
+.eq-reset-btn {
+    margin-top: 25px;
+    background-color: #f104048e; /* Naranja */
+    color: rgb(252, 252, 252);
+}
+
+.eq-reset-btn:hover {
+    background-color: #f07000; /* Naranja más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* --- 12. Media Queries para diseño responsivo --- */
+@media (max-width: 992px) {
+    .radio-main {
+        grid-template-columns: 1fr; /* Una sola columna en tabletas y móviles */
+    }
+
+    .player-section,
+    .playlist-section,
+    .ads-time-section,
+    .equalizer-section {
+        grid-column: 1 / -1; /* Ocupa todo el ancho */
+        margin-top: 20px; /* Ajuste de margen para pantallas más pequeñas */
+    }
+
+    .radio-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        text-align: center;
+    }
+    .radio-header h1 {
+        font-size: 2em;
+        width: 100%;
+        justify-content: center; /* Centrar el título y el icono */
+    }
+    .radio-header .current-time {
+        width: 100%;
+        text-align: center;
+        font-size: 1.1em;
+    }
+    .scrolling-banner {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding: 10px;
+    }
+    .radio-container {
+        padding: 15px;
+        margin: 10px;
+    }
+    section {
+        padding: 15px;
+    }
+    section h2 {
+        font-size: 1.5em;
+    }
+    .player-display {
+        padding: 15px;
+    }
+    #nowPlaying {
+        font-size: 1.4em;
+    }
+    .controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .controls .btn {
+        width: 100%;
+        max-width: none;
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+    .volume-control input[type="range"] {
+        width: 100px; /* Ajuste para móviles */
+    }
+    .playlist-controls {
+        flex-direction: column;
+    }
+    .playlist-controls .btn,
+    .playlist-controls .input-text {
+        width: 100%;
+        max-width: none;
+        padding: 10px;
+    }
+    .playlist-items li {
+        padding: 10px;
+    }
+    .ads-time-section h3 {
+        font-size: 1.2em;
+    }
+    .ad-settings, .time-settings {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .ad-settings label, .time-settings label {
+        width: 100%;
+        text-align: left;
+    }
+    .ad-settings input[type="number"], .time-settings input[type="number"] {
+        width: 100%;
+        max-width: none;
+    }
+    .ad-settings .btn, .time-settings .btn {
+        width: 100%;
+        max-width: none;
+    }
+    .equalizer-controls {
+        gap: 5px; /* Menor espacio entre sliders en pantallas pequeñas */
+    }
+    .eq-band {
+        width: 50px;
+    }
+    .eq-band input[type="range"] {
+        height: 100px;
+    }
+}
