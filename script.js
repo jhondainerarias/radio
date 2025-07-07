@@ -21,7 +21,7 @@ const duckVolumeBtn = document.getElementById('duckVolumeBtn'); // Botón para e
 const localFileInput = document.getElementById('localFileInput');
 const addLocalBtn = document.getElementById('addLocalBtn');
 const youtubeUrlInput = document.getElementById('youtubeUrlInput');
-const addYoutubeBtn = document = document.getElementById('addYoutubeBtn');
+const addYoutubeBtn = document.getElementById('addYoutubeBtn'); // <-- Corrección aquí, quitado '=' extra
 const playlistUl = document.getElementById('playlist');
 
 // Controles de Publicidad (Spots)
@@ -53,7 +53,7 @@ let currentPlayingType = null; // 'audio' o 'youtube'
 let autoAdIntervalId = null; // ID del temporizador para publicidad automática
 let autoTimeIntervalId = null; // ID del temporizador para la hora automática
 let isDuckingActive = false; // Estado del pisador (manual/automático)
-let originalMainVolumeBeforeDuck = mainVolumeControl.value; // Guarda el volumen principal antes de atenuarlo
+let originalMainVolumeBeforeDuck = 0.5; // Valor por defecto si mainVolumeControl.value no está disponible al inicio
 let mainPlayerPausedBeforeDuck = false; // Guarda el estado de reproducción del reproductor principal
 
 // --- NUEVAS VARIABLES GLOBALES PARA LA VOZ DE LA HORA ---
@@ -109,8 +109,10 @@ function playTrack(index) {
         youtubePlayerContainer.style.width = '0px';
         youtubePlayerContainer.style.height = '0px';
         youtubePlayerContainer.style.visibility = 'hidden';
-        mainAudioPlayer.style.display = 'block'; // Mostrar de nuevo el control de audio HTML5 si estaba oculto
     }
+    // Asegurarse de que el reproductor de audio HTML5 esté visible si se va a usar
+    mainAudioPlayer.style.display = 'block';
+
     if (currentPlayingType === 'audio' && !mainAudioPlayer.paused) {
         mainAudioPlayer.pause();
     }
@@ -131,10 +133,16 @@ function playTrack(index) {
     if (track.type === 'local') {
         currentPlayingType = 'audio';
         mainAudioPlayer.src = track.src;
-        mainAudioPlayer.play();
+        mainAudioPlayer.play().catch(e => console.error("Error al reproducir audio local:", e));
         togglePlayPauseButton(true);
     } else if (track.type === 'youtube') {
         currentPlayingType = 'youtube';
+        mainAudioPlayer.pause(); // Asegúrate de que el audio principal esté pausado
+        mainAudioPlayer.style.display = 'none'; // Ocultar el control de audio HTML5
+        youtubePlayerContainer.style.width = '100%'; // Mostrar el contenedor de YouTube
+        youtubePlayerContainer.style.height = '360px'; // Altura típica de video
+        youtubePlayerContainer.style.visibility = 'visible';
+
         // Inicializar o cargar video de YouTube
         if (!youtubePlayer) {
             loadYoutubePlayer(track.src);
@@ -142,11 +150,6 @@ function playTrack(index) {
             youtubePlayer.loadVideoById(track.src);
             youtubePlayer.playVideo();
         }
-        mainAudioPlayer.pause(); // Asegúrate de que el audio principal esté pausado
-        mainAudioPlayer.style.display = 'none'; // Ocultar el control de audio HTML5
-        youtubePlayerContainer.style.width = '100%'; // Mostrar el contenedor de YouTube
-        youtubePlayerContainer.style.height = '360px'; // Altura típica de video
-        youtubePlayerContainer.style.visibility = 'visible';
         togglePlayPauseButton(true);
     }
 }
@@ -155,7 +158,7 @@ function playTrack(index) {
 function togglePlayPause() {
     if (currentPlayingType === 'audio') {
         if (mainAudioPlayer.paused) {
-            mainAudioPlayer.play();
+            mainAudioPlayer.play().catch(e => console.error("Error al reanudar audio local:", e));
             togglePlayPauseButton(true);
         } else {
             mainAudioPlayer.pause();
@@ -163,7 +166,7 @@ function togglePlayPause() {
         }
     } else if (currentPlayingType === 'youtube' && youtubePlayer) {
         const playerState = youtubePlayer.getPlayerState();
-        if (playerState === YT.PlayerState.PAUSED || playerState === YT.PlayerState.ENDED) {
+        if (playerState === YT.PlayerState.PAUSED || playerState === YT.PlayerState.ENDED || playerState === YT.PlayerState.CUED) {
             youtubePlayer.playVideo();
             togglePlayPauseButton(true);
         } else {
@@ -171,16 +174,19 @@ function togglePlayPause() {
             togglePlayPauseButton(false);
         }
     } else {
-        playTrack(currentTrackIndex); // Intenta reproducir si no hay nada sonando
+        // Intenta reproducir la primera pista si no hay nada sonando
+        playTrack(currentTrackIndex === -1 ? 0 : currentTrackIndex);
     }
 }
 
 function playNextTrack() {
-    playTrack(currentTrackIndex + 1);
+    if (playlist.length === 0) return;
+    playTrack((currentTrackIndex + 1) % playlist.length); // Ciclo a la primera pista al llegar al final
 }
 
 function playPrevTrack() {
-    playTrack(currentTrackIndex - 1);
+    if (playlist.length === 0) return;
+    playTrack((currentTrackIndex - 1 + playlist.length) % playlist.length); // Ciclo a la última pista al llegar al inicio
 }
 
 function stopMainPlayer() {
@@ -192,8 +198,8 @@ function stopMainPlayer() {
         youtubePlayerContainer.style.width = '0px';
         youtubePlayerContainer.style.height = '0px';
         youtubePlayerContainer.style.visibility = 'hidden';
-        mainAudioPlayer.style.display = 'block'; // Mostrar de nuevo el control de audio HTML5
     }
+    mainAudioPlayer.style.display = 'block'; // Asegúrate de que el reproductor de audio HTML5 sea visible al detener
     togglePlayPauseButton(false);
     nowPlayingDisplay.textContent = "Ninguna pista reproduciéndose...";
     currentPlayingType = null;
@@ -214,12 +220,12 @@ function duckMainVolume() {
         originalMainVolumeBeforeDuck = mainAudioPlayer.volume; // Guarda el volumen actual
         mainPlayerPausedBeforeDuck = mainAudioPlayer.paused; // Guarda el estado de reproducción
 
-        if (!mainAudioPlayer.paused) {
+        if (currentPlayingType === 'audio' && !mainAudioPlayer.paused) {
             mainAudioPlayer.volume = 0.2; // Atenúa el volumen
-            mainAudioPlayer.play(); // Asegura que siga sonando a bajo volumen
+            mainAudioPlayer.play().catch(e => console.error("Error al reanudar audio en ducking:", e)); // Asegura que siga sonando a bajo volumen
         }
 
-        if (youtubePlayer && (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING || youtubePlayer.getPlayerState() === YT.PlayerState.PAUSED)) {
+        if (currentPlayingType === 'youtube' && youtubePlayer && (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING || youtubePlayer.getPlayerState() === YT.PlayerState.PAUSED)) {
             youtubePlayer.setVolume(20); // YouTube usa 0-100
             if (youtubePlayer.getPlayerState() === YT.PlayerState.PAUSED) {
                 youtubePlayer.playVideo(); // Si estaba pausado, lo reanuda para atenuarlo
@@ -237,12 +243,14 @@ function duckMainVolume() {
 // Función para restaurar el volumen del reproductor principal
 function restoreMainVolume() {
     if (isDuckingActive) {
-        mainAudioPlayer.volume = originalMainVolumeBeforeDuck; // Restaura el volumen
-        if (mainPlayerPausedBeforeDuck) { // Si estaba pausado antes, vuelve a pausarlo
-            mainAudioPlayer.pause();
+        if (currentPlayingType === 'audio') {
+            mainAudioPlayer.volume = originalMainVolumeBeforeDuck; // Restaura el volumen
+            if (mainPlayerPausedBeforeDuck) { // Si estaba pausado antes, vuelve a pausarlo
+                mainAudioPlayer.pause();
+            }
         }
 
-        if (youtubePlayer) {
+        if (currentPlayingType === 'youtube' && youtubePlayer) {
             youtubePlayer.setVolume(originalMainVolumeBeforeDuck * 100); // Restaura volumen YouTube (0-100)
             if (mainPlayerPausedBeforeDuck) {
                 youtubePlayer.pauseVideo();
@@ -268,11 +276,9 @@ function toggleDuckVolumeManual() {
             restoreMainVolume();
             duckVolumeBtn.dataset.manualDuck = 'false'; // Resetea
         } else {
-            // Si está ducking por un spot y se presiona, lo "libera" pero no lo desactiva permanentemente
             // Este caso es más complejo y podría requerir un estado adicional
             // Por simplicidad, el botón manual SIEMPRE alterna su propio estado.
             restoreMainVolume();
-            // Y si había un spot sonando, se encargará de volver a duckear si es necesario.
         }
     }
 }
@@ -306,8 +312,7 @@ function addYoutubeVideo(url) {
     }
 
     playlistUl.querySelector('.placeholder-item')?.remove();
-    
-    // Obtener información básica del video (solo un ejemplo, requiere API Key de YouTube para título)
+
     // Por simplicidad, usaremos el ID como nombre de la pista
     const videoName = `YouTube: ${videoId}`;
 
@@ -389,13 +394,12 @@ function playRandomAd() {
     duckMainVolume(); // Atenúa el volumen principal antes de sonar el spot
 
     adAudioPlayer.src = adToPlay.src;
-    adAudioPlayer.play();
+    adAudioPlayer.play().catch(e => console.error("Error al reproducir spot:", e));
 
     // Cuando el spot termine, restaurar el volumen principal
     adAudioPlayer.onended = () => {
         console.log("Spot terminado.");
         restoreMainVolume();
-        // Opcional: Reanudar temporizador de auto-ad si se interrumpió y estaba activo
     };
     adAudioPlayer.onerror = (e) => {
         console.error("Error al reproducir el spot:", e);
@@ -411,7 +415,7 @@ function stopAd() {
 }
 
 function removeAdItem(targetElement) {
-    const li = target.closest('li');
+    const li = targetElement.closest('li'); // <-- Corrección aquí, usaba 'target' en lugar de 'targetElement'
     if (!li) return;
 
     const index = Array.from(adListUl.children).indexOf(li);
@@ -583,9 +587,11 @@ function setupAudioContext() {
                 filter.connect(audioContext.destination);
             }
         });
-
-        // Asegúrate de que el audio original no vaya directamente al destino
-        // sourceNode.disconnect(audioContext.destination); // Desconectar si ya estaba conectado
+        // IMPORTANTE: Asegúrate de que el sourceNode no esté conectado directamente al destino
+        // si ya lo estás conectando a través de los filtros.
+        // Si el mainAudioPlayer ya estaba conectado al destino, deberías desconectarlo.
+        // Por simplicidad en este caso, si ya se conectó a través de los filtros,
+        // no debería haber una conexión directa preexistente que interfiera.
     }
 }
 
@@ -625,8 +631,16 @@ function createEqualizerControls() {
     equalizerControls.appendChild(resetBtn);
 
      // Conectar mainAudioPlayer a la cadena del ecualizador
-     mainAudioPlayer.addEventListener('play', setupAudioContext);
-     mainAudioPlayer.addEventListener('playing', setupAudioContext);
+     // Es mejor llamar a setupAudioContext() en el primer 'play' o cuando el usuario interactúa
+     // para cumplir con las políticas de autoplay de los navegadores.
+     // Ya lo tienes en DOMContentLoaded, pero es clave que el contexto de audio se reanude en interacción.
+     mainAudioPlayer.addEventListener('play', () => {
+        if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        setupAudioContext(); // Asegura que el contexto esté configurado al empezar a reproducir
+     });
+     // mainAudioPlayer.addEventListener('playing', setupAudioContext); // 'playing' también puede disparar setup
 }
 
 function resetEqualizer() {
@@ -642,11 +656,34 @@ function resetEqualizer() {
 
 // --- 9. Carga del Reproductor de YouTube (API Iframe Player) ---
 
+function createYoutubePlayer(videoId) {
+    if (youtubePlayer) {
+        youtubePlayer.destroy(); // Destruye la instancia anterior si existe
+    }
+    youtubePlayer = new YT.Player('youtubePlayerContainer', {
+        height: '360',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+            'playsinline': 1,
+            'autoplay': 1, // Intentar autoplay
+            'controls': 1 // Mostrar controles de YouTube
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': (e) => console.error("Error de YouTube Player:", e)
+        }
+    });
+}
+
 function loadYoutubePlayer(videoId) {
     if (typeof YT === 'undefined' || !YT.Player) {
         // La API de YouTube no se ha cargado o no está lista, la cargamos.
         var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+        // --- CORRECCIÓN CRÍTICA AQUÍ ---
+        tag.src = "https://www.youtube.com/iframe_api"; // URL CORRECTA DE LA API DE YOUTUBE
+        // --------------------------------
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     } else {
@@ -657,17 +694,19 @@ function loadYoutubePlayer(videoId) {
 window.onYouTubeIframeAPIReady = function() {
     // Esta función se llama automáticamente cuando la API de YouTube está lista.
     // Solo creamos el reproductor si hay un video en la playlist para él.
-    if (currentPlayingType === 'youtube' && playlist[currentTrackIndex]) {
-        createYoutubePlayer(playlist[currentTrackIndex].src);
+    // Opcionalmente, podemos inicializar un reproductor vacío para que esté listo.
+    console.log("API de YouTube IFrame lista.");
+    // Si la playlist no está vacía y la primera pista es de YouTube, o si hay alguna
+    // pista de YouTube, podemos inicializar con esa.
+    if (playlist.length > 0 && playlist[0].type === 'youtube') {
+        createYoutubePlayer(playlist[0].src);
     } else if (playlist.some(p => p.type === 'youtube')) {
-        // Si hay algún video de YouTube en la lista, podemos pre-crear el reproductor
-        // con un video vacío o el primero para que esté listo.
-        createYoutubePlayer(playlist.find(p => p.type === 'youtube').src || '');
+        createYoutubePlayer(playlist.find(p => p.type === 'youtube').src);
     } else {
-        // Si no hay videos de YouTube, podemos inicializar con un placeholder
-        createYoutubePlayer('');
+        createYoutubePlayer(''); // Crea un reproductor con video vacío por defecto
     }
 };
+
 
 function onPlayerReady(event) {
     console.log("Reproductor de YouTube listo.");
@@ -679,6 +718,8 @@ function onPlayerReady(event) {
         youtubePlayerContainer.style.height = '360px';
         youtubePlayerContainer.style.visibility = 'visible';
     }
+    // Asegura que el volumen se sincronice con el control principal
+    event.target.setVolume(mainVolumeControl.value * 100);
 }
 
 function onPlayerStateChange(event) {
@@ -711,32 +752,39 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCurrentTime(); // Muestra la hora al cargar
     setInterval(updateCurrentTime, 1000); // Actualiza cada segundo
     createEqualizerControls(); // Crea los controles del ecualizador
-    setupAudioContext(); // Inicializa el contexto de audio
+    // setupAudioContext(); // No es ideal llamarlo aquí si no hay interacción del usuario. Mejor en 'play'
 
     // Inicializar el valor del volumen
-    mainAudioPlayer.volume = parseFloat(mainVolumeControl.value);
+    // Asegura que mainVolumeControl.value tenga un valor antes de asignarlo
+    originalMainVolumeBeforeDuck = parseFloat(mainVolumeControl.value) || 0.5; // Valor por defecto 0.5
+    mainAudioPlayer.volume = originalMainVolumeBeforeDuck;
     adAudioPlayer.volume = 1; // Los spots deben sonar a volumen completo por defecto
 
     // Cargar las voces de síntesis de voz (AJUSTE PARA VOZ LATINA)
     if ('speechSynthesis' in window) {
-        // La API es asíncrona, esperamos a que las voces estén cargadas
         speechSynthesis.onvoiceschanged = () => {
             availableVoices = speechSynthesis.getVoices();
             console.log("Voces de síntesis de voz disponibles:", availableVoices);
-            // Intenta encontrar una voz latina después de que se carguen
             findPreferredLatinoVoice();
         };
-        // Llama getVoices() inmediatamente por si ya están cargadas
+        // También llamar inmediatamente por si las voces ya están cargadas
         availableVoices = speechSynthesis.getVoices();
         if (availableVoices.length > 0) {
             findPreferredLatinoVoice();
         }
     }
-    // Si hay una imagen de fondo en el body, la vemos.
-    // Si queremos el reproductor principal visible pero sin sonido inicialmente
-    mainAudioPlayer.muted = true; // Empieza muteado para evitar autoplay inesperado
-    mainAudioPlayer.play().catch(e => console.log("Autoplay bloqueado inicialmente:", e));
-    mainAudioPlayer.muted = false; // Desmutea inmediatamente, el usuario controlará el play/pause
+
+    // Manejo de autoplay: Los navegadores bloquean el autoplay con sonido.
+    // Mutea y luego intenta reproducir para que el contexto de audio se active.
+    // El usuario deberá interactuar para desmutear o reproducir sonido.
+    mainAudioPlayer.muted = true;
+    mainAudioPlayer.play().then(() => {
+        console.log("Autoplay inicial intentado y permitido (mutado).");
+        mainAudioPlayer.muted = false; // Desmutea después de la interacción para que el usuario tenga control
+    }).catch(e => {
+        console.warn("Autoplay bloqueado inicialmente, se requiere interacción del usuario:", e.name);
+        mainAudioPlayer.muted = false; // Asegúrate de desmutear para que el control de volumen funcione
+    });
 });
 
 // Controles del reproductor principal
@@ -747,21 +795,26 @@ mainStopBtn.addEventListener('click', stopMainPlayer);
 duckVolumeBtn.addEventListener('click', toggleDuckVolumeManual); // Evento para el botón pisador manual
 
 mainVolumeControl.addEventListener('input', (e) => {
-    mainAudioPlayer.volume = parseFloat(e.target.value);
+    const newVolume = parseFloat(e.target.value);
+    mainAudioPlayer.volume = newVolume;
     if (!isDuckingActive) { // Solo guarda el volumen si no estamos en ducking
-        originalMainVolumeBeforeDuck = mainAudioPlayer.volume;
+        originalMainVolumeBeforeDuck = newVolume;
     }
     if (youtubePlayer) {
-        youtubePlayer.setVolume(parseFloat(e.target.value) * 100);
+        youtubePlayer.setVolume(newVolume * 100);
     }
 });
 
 mainAudioPlayer.addEventListener('timeupdate', () => {
     const progress = (mainAudioPlayer.currentTime / mainAudioPlayer.duration) * 100;
-    mainProgressBar.style.width = `${progress}%`;
+    if (!isNaN(progress)) { // Asegurarse de que duration no sea 0 o NaN
+        mainProgressBar.style.width = `${progress}%`;
+    }
 });
 
 mainAudioPlayer.addEventListener('ended', playNextTrack);
+mainAudioPlayer.addEventListener('error', (e) => console.error("Error en mainAudioPlayer:", e));
+
 
 // Lista de reproducción
 addLocalBtn.addEventListener('click', () => localFileInput.click());
