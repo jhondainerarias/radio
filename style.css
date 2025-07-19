@@ -1,675 +1,574 @@
-/* style.css */
+/* Importar fuentes de Google Fonts para un toque moderno y legible */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap');
 
-/* --- 1. Variables CSS para colores y tipografía --- */
+/* Variables CSS para facilitar la gestión de colores y espaciados */
 :root {
-    --primary-color: #007bff; /* Azul vibrante */
-    --secondary-color: #6c757d; /* Gris para textos secundarios/bordes */
-    --accent-color: #28a745; /* Verde para acciones importantes (Play, Add) */
-    --background-color: #f8f9fa; /* Fondo claro de la página */
-    --card-background: #ffffff; /* Fondo blanco para las secciones/tarjetas */
-    --border-color: #dee2e6; /* Color de borde general */
-    --text-color: #343a40; /* Texto principal oscuro */
-    --light-text-color: #6c757d; /* Texto más claro */
-    --highlight-color: #ffe0b2; /* Para elementos activos o seleccionados */
-    --error-color: #dc3545; /* Rojo para errores o advertencias */
-    --danger-color: #dc3545; /* Rojo para botones de "Stop" */
-
-    --font-family-sans: 'Roboto', sans-serif; /* Usaremos Roboto, importada de Google Fonts */
-    --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    --primary-color: #ff4d4d; /* Un rojo vibrante para los acentos */
+    --secondary-color: #3498db; /* Azul complementario */
+    --dark-background: #1a1a1a; /* Fondo oscuro casi negro */
+    --light-text: #f0f0f0; /* Texto claro para contrastar */
+    --card-background: rgba(30, 30, 30, 0.9); /* Fondo semitransparente para las secciones */
+    --border-radius: 10px;
+    --box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    --transition-speed: 0.3s ease;
 }
 
-/* Importar fuente Roboto de Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+/* --- Estilos Generales --- */
+html {
+    height: 100%; /* Asegura que el elemento raíz html ocupe toda la altura de la ventana */
+}
 
-/* --- 2. Reset básico y estilos generales --- */
 body {
-    font-family: var(--font-family-sans);
-    margin: 20;
-    padding: 0;
-    line-height: 1.6;
-    color: var(--text-color);
-
-    /* Imagen de fondo fija para todo el contenido */
-    background-image: url('imagen/1.jpg'); /* Asegúrate de que esta ruta sea correcta */
-    background-size: cover; /* Escala la imagen para cubrir todo el body */
-    background-position: center center; /* Centra la imagen */
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
-    background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
-
-    display: flex;
-    justify-content: center; /* Centra el `radio-container` horizontalmente */
-    align-items: flex-start; /* Alinea el `radio-container` al inicio verticalmente */
-    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana */
-    padding: 20px; /* Espacio alrededor del contenedor principal */
-    box-sizing: border-box; /* Incluye padding y borde en el ancho/alto */
-}
-
-a {
-    text-decoration: none;
-    color: var(--primary-color);
-}
-
-ul {
-    list-style: none;
-    padding: 0;
     margin: 0;
+    /* Ajusta el padding para que se aplique correctamente al contenido y no interfiera con la altura total */
+    padding: 20px; /* Padding general en todos los lados del body */
+    
+    font-family: 'Montserrat', sans-serif;
+    color: var(--light-text);
+    line-height: 1.6;
+    background: url('https://images.unsplash.com/photo-1517292987829-d04b68484a51?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+    background-size: cover;
+
+    /* REPARACIÓN DEL FOOTER: ESTAS SON LAS PROPIEDADES CLAVE */
+    display: flex; /* Habilita Flexbox */
+    flex-direction: column; /* Apila los elementos hijos (radio-container, footer) verticalmente */
+    align-items: center; /* Centra el contenido principal (radio-container) horizontalmente */
+
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana visible */
+    box-sizing: border-box; /* Incluye el padding en el cálculo del ancho y alto total */
+    
+    /* Eliminar overflow-y: auto; del body. El navegador lo maneja por defecto.
+       Si lo dejas aquí, podrías ver barras de scroll dobles o comportamientos inesperados. */
+    /* overflow-y: auto; */
 }
 
-/* --- 3. Contenedor principal de la radio --- */
 .radio-container {
-    background-color: var(--card-background); /* Fondo blanco para el contenedor principal */
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 1200px;
     width: 100%;
-    max-width: 1200px; /* Ancho máximo para pantallas grandes */
+    overflow: hidden; /* Mantiene los bordes redondeados internos */
+
+    /* Importante para empujar el footer hacia abajo */
+    flex-grow: 1; /* Permite que este contenedor ocupe todo el espacio vertical disponible,
+                    empujando el footer hacia la parte inferior. */
+    
+    /* Mantener display flex y flex-direction column para organizar su contenido interno */
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Asegura que nada se desborde del contenedor principal */
-    padding: 30px;
+    gap: 20px;
+    padding-bottom: 20px; /* Espacio interno al final del contenedor */
 }
 
-/* --- 4. Banner deslizante --- */
+/* --- Banner Deslizante --- */
 .scrolling-banner {
-    width: 100%;
-    /* Fondo semitransparente para que se vea la imagen de fondo del body */
-    background-color: rgba(250, 249, 248, 0.7); /* Naranja semi-transparente */
-    color: rgb(1, 0, 10); /* Texto blanco para contrastar */
+    background-color: var(--primary-color);
+    color: var(--dark-background);
     padding: 10px 0;
-    overflow: hidden;
     white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    position: relative;
-    margin-bottom: 20px; /* Espacio debajo del banner */
-    font-size: 1.3em;
-    font-weight: bold;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .scrolling-text {
     display: inline-block;
-    padding-left: 100%; /* El texto comienza fuera de la pantalla a la derecha */
-    animation: scroll-left 20s linear infinite; /* Velocidad ajustada para texto más largo */
+    padding-left: 100%; /* Inicia el texto fuera de la vista */
+    animation: scrollText 30s linear infinite;
+    font-weight: 600;
+    font-size: 1.1em;
 }
 
-@keyframes scroll-left {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-100%); }
+@keyframes scrollText {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
-/* --- 5. Encabezado de la radio --- */
+/* --- Encabezado --- */
 .radio-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--border-color);
-    /* Fondo transparente para que se vea la imagen del body */
-    background-color: transparent; /* O puedes usar rgba(0,0,0,0.3) para un ligero tinte */
-    color: var(--text-color); /* Color de texto que contraste con el fondo */
+    text-align: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .radio-header h1 {
-    margin: 0;
-    font-size: 2.5em; /* Tamaño de fuente más grande para el título */
-    color: var(--primary-color); /* Color azul vibrante */
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Espacio entre el texto y el icono */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8em;
+    margin: 0 0 10px;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .radio-header h1 i {
-    font-size: 0.9em; /* Ajusta el tamaño del icono */
-    color: var(--accent-color); /* Color verde para el icono */
+    color: var(--secondary-color);
+    margin-left: 10px;
 }
 
-.radio-header .current-time {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: var(--light-text-color);
-    background-color:#c5e2f5; /* Fondo ligero para la hora */
-    padding: 8px 15px;
-    border-radius: 5px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+.current-time {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5em;
+    color: var(--light-text);
+    margin-top: 10px;
 }
 
-/* --- 6. Diseño principal con Grid --- */
+/* --- Contenido Principal --- */
 .radio-main {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Reproductor y lista a la izquierda (2 partes), publicidad/hora a la derecha (1 parte) */
-    gap: 20px; /* Espacio entre las columnas */
+    grid-template-columns: 2fr 1fr; /* Una columna más ancha para el reproductor y otra para la lista */
+    gap: 30px;
+    padding: 0 20px;
 }
 
-/* Secciones generales */
-section {
-    background-color:url(imagen/1.jpg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px; /* Bordes más suaves */
+/* Sección de Reproductor y Ecualizador (columna izquierda) */
+.player-section,
+.equalizer-section {
+    background: var(--card-background);
     padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra suave */
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-section h2 {
-    margin-top: 0;
+.player-section h2,
+.playlist-section h2,
+.equalizer-section h2,
+.admin-section h2,
+.admin-section h3 {
     color: var(--primary-color);
-    font-size: 1.8em; /* Títulos de sección más grandes */
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--border-color);
+    font-size: 1.8em;
+    margin-top: 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 10px;
-}
-
-/* --- 7. Sección del Reproductor Principal --- */
-.player-section {
-    grid-column: 1 / 2; /* Ocupa la primera columna */
+    margin-bottom: 20px;
 }
 
 .player-display {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: var(--border-radius);
     text-align: center;
     margin-bottom: 25px;
-    background-color: #acf2f5; /* Fondo ligeramente más oscuro para el display */
-    padding: 25px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 #nowPlaying {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: var(--text-color);
-    margin: 0 0 15px 0;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--light-text);
+    margin-bottom: 15px;
+    min-height: 20px; /* Para mantener el espacio si no hay nada sonando */
 }
 
 .progress-bar-container {
-    background-color: var(--border-color);
+    width: 100%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
-    height: 15px; /* Barra de progreso un poco más alta */
     overflow: hidden;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
-#mainProgressBar {
-    background-color: var(--primary-color);
+.progress-bar {
     height: 100%;
-    width: 0%; /* Controlado por JS */
+    width: 0%;
+    background-color: var(--secondary-color);
     border-radius: 5px;
-    transition: width 0.1s linear; /* Suaviza el movimiento de la barra */
+    transition: width 0.1s linear;
 }
 
-.controls { /* Renombrado de .player-controls a .controls para claridad */
+.controls {
     display: flex;
+    flex-wrap: wrap; /* Permite que los botones se ajusten en filas */
     justify-content: center;
-    align-items: center;
     gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 20px; /* Espacio sobre los controles */
+    margin-bottom: 20px;
 }
 
-.controls .btn {
-    padding: 12px 25px;
+.btn {
+    background-color: var(--secondary-color);
+    color: var(--light-text);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn i {
     font-size: 1.1em;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+}
+
+.btn.primary:hover {
+    background-color: #cc3333;
+}
+
+.btn.secondary {
+    background-color: #555;
+}
+
+.btn.secondary:hover {
+    background-color: #666;
+}
+
+.btn.danger {
+    background-color: #c0392b;
+}
+
+.btn.danger:hover {
+    background-color: #a32f22;
 }
 
 .volume-control {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 20px; /* Espacio sobre el control de volumen */
+    width: 100%; /* Ocupa todo el ancho disponible */
     justify-content: center;
+    margin-top: 15px;
 }
 
 .volume-control label {
-    font-weight: bold;
-    color: var(--text-color);
+    font-weight: 600;
 }
 
 .volume-control input[type="range"] {
-    width: 150px; /* Ancho del slider de volumen */
-    height: 10px;
+    width: 150px;
     -webkit-appearance: none;
-    background: var(--border-color);
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     outline: none;
-    cursor: grab;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transition: background var(--transition-speed);
 }
 
 .volume-control input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px; /* Tamaño del thumb */
+    appearance: none;
+    width: 20px;
     height: 20px;
-    border-radius: 50%;
     background: var(--primary-color);
-    cursor: pointer;
-    border: 3px solid var(--card-background); /* Borde blanco para el thumb */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: background-color 0.2s ease;
-}
-
-.volume-control input[type="range"]::-webkit-slider-thumb:hover {
-    background: darken(var(--primary-color), 10%); /* Hover effect */
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transition: background var(--transition-speed);
 }
 
 .volume-control input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    border-radius: 50%;
     background: var(--primary-color);
-    cursor: pointer;
-    border: 3px solid var(--card-background);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: background-color 0.2s ease;
-}
-.volume-control input[type="range"]::-moz-range-thumb:hover {
-    background: darken(var(--primary-color), 10%); /* Hover effect */
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transition: background var(--transition-speed);
 }
 
-
-#mainAudioPlayer {
-    display: none; /* Ocultar el reproductor nativo */
-}
-
-#youtubePlayerContainer {
-    /* YouTube iframe se oculta con JS al inicializar */
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
-    position: absolute;
-}
-
-/* --- 8. Sección de Lista de Reproducción --- */
-.playlist-section {
-    grid-column: 1 / 2; /* Ocupa la primera columna, debajo del reproductor */
-    margin-top: 30px; /* Espacio entre secciones */
-}
-
-.playlist-controls {
+/* Ecualizador */
+.equalizer-controls {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    justify-content: space-around;
+    gap: 15px;
     flex-wrap: wrap;
-    justify-content: center; /* Centra los controles */
 }
 
-.playlist-controls .btn {
-    flex-grow: 1;
-    max-width: 220px; /* Ancho máximo para botones de playlist */
-}
-
-.playlist-controls .input-text {
-    flex-grow: 2;
-    padding: 12px 15px; /* Más padding para inputs */
-    border: 1px solid var(--border-color);
-    border-radius: 8px; /* Bordes más redondeados */
-    font-size: 1em;
-    max-width: 350px;
-}
-
-.playlist-items {
-    max-height: 350px; /* Altura máxima para la lista con scroll */
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    background-color: #fdfdfd;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.playlist-items li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px; /* Más padding para los ítems */
-    border-bottom: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.playlist-items li:last-child {
-    border-bottom: none;
-}
-
-.playlist-items li:hover {
-    background-color: var(--background-color);
-    transform: translateY(-2px);
-}
-
-.playlist-items li.active {
-    background-color: var(--highlight-color);
-    font-weight: bold;
-    color: var(--text-color);
-    box-shadow: inset 3px 0 0 var(--primary-color); /* Borde izquierdo para activo */
-}
-
-.playlist-items .remove-item-btn {
-    background: none;
-    border: none;
-    color: var(--secondary-color);
-    cursor: pointer;
-    font-size: 1.2em; /* Icono de remover más grande */
-    transition: color 0.2s ease, transform 0.1s ease;
-}
-
-.playlist-items .remove-item-btn:hover {
-    color: var(--error-color);
-    transform: scale(1.1);
-}
-
-.playlist-items .placeholder-item {
-    font-style: italic;
-    color: var(--light-text-color);
-    text-align: center;
-    padding: 30px;
-}
-
-
-/* --- 9. Sección de Publicidad y Hora (columna derecha) --- */
-.ads-time-section {
-    grid-column: 2 / 3; /* Ocupa la segunda columna */
+.equalizer-band {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
+.equalizer-band label {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.equalizer-band input[type="range"] {
+    width: 10px;
+    height: 100px; /* Altura vertical para el ecualizador */
+    -webkit-appearance: slider-vertical; /* Para Chrome/Safari */
+    writing-mode: bt-lr; /* Para Firefox */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    outline: none;
+    transition: background var(--transition-speed);
+}
+
+.equalizer-band input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.equalizer-band input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Sección de Lista de Reproducción y Administrador (columna derecha) */
+.playlist-section,
+.admin-section {
+    background: var(--card-background);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.playlist-controls,
 .ad-controls,
 .time-controls {
-    background-color: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
 }
 
-.ad-controls h3,
-.time-controls h3 {
-    margin-top: 0;
-    color:#df890a;
-    font-size: 1.5em; /* Títulos de subsección */
-    margin-bottom: 15px;
-    border-bottom: 1px dotted var(--border-color);
-    padding-bottom: 8px;
-}
-
-.ad-controls .btn,
-.time-controls .btn {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.ad-controls .input-text,
-.ad-settings input[type="number"],
-.time-settings input[type="number"] {
-    width: calc(100% - 24px); /* Ancho completo menos padding */
-    padding: 12px;
-    border: 1px solid var(--border-color);
+.input-text {
+    flex-grow: 1; /* Permite que ocupe el espacio disponible */
+    padding: 10px 15px;
     border-radius: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--light-text);
+    font-size: 1em;
+    transition: border-color var(--transition-speed), background-color var(--transition-speed);
 }
 
+.input-text::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input-text:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.playlist-items,
 .ad-items {
-    max-height: 180px; /* Altura para la lista de ads */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px; /* Limita la altura para permitir scroll */
     overflow-y: auto;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    background-color: #eff5b8;
-    margin-top: 15px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
+.playlist-items::-webkit-scrollbar,
+.ad-items::-webkit-scrollbar {
+    width: 8px;
+}
+
+.playlist-items::-webkit-scrollbar-track,
+.ad-items::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.playlist-items::-webkit-scrollbar-thumb,
+.ad-items::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.playlist-items::-webkit-scrollbar-thumb:hover,
+.ad-items::-webkit-scrollbar-thumb:hover {
+    background: #cc3333;
+}
+
+
+.playlist-items li,
 .ad-items li {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 15px;
-    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-speed);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
 }
 
+.playlist-items li:last-child,
 .ad-items li:last-child {
     border-bottom: none;
 }
 
-.ad-items .remove-item-btn {
+.playlist-items li:hover,
+.ad-items li:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.playlist-items li.active {
+    background-color: rgba(var(--primary-color), 0.2);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.playlist-items li .remove-btn,
+.ad-items li .remove-btn {
     background: none;
     border: none;
-    color: var(--secondary-color);
+    color: var(--primary-color);
     cursor: pointer;
     font-size: 1.1em;
-    transition: color 0.2s ease, transform 0.1s ease;
+    opacity: 0.7;
+    transition: opacity var(--transition-speed), color var(--transition-speed);
 }
 
-.ad-items .remove-item-btn:hover {
-    color: var(--error-color);
-    transform: scale(1.1);
+.playlist-items li .remove-btn:hover,
+.ad-items li .remove-btn:hover {
+    opacity: 1;
+    color: #ff0000;
 }
 
+.placeholder-item {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 20px;
+}
+
+/* Controles de Publicidad y Hora */
 .ad-settings, .time-settings {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
-    justify-content: space-between; /* Distribuye elementos uniformemente */
+    margin-top: 15px;
+    width: 100%;
+    flex-wrap: wrap; /* Asegura que los elementos se envuelvan en pantallas pequeñas */
 }
 
 .ad-settings label, .time-settings label {
-    font-weight: bold;
-    color: var(--text-color);
-    white-space: nowrap; /* Evita que el texto de la label se rompa */
+    white-space: nowrap;
+    font-weight: 600;
 }
 
 .ad-settings input[type="number"], .time-settings input[type="number"] {
-    flex-grow: 1;
-    max-width: 90px; /* Ancho fijo para inputs numéricos */
-    text-align: center;
-}
-
-.ad-settings .btn, .time-settings .btn {
-    flex-grow: 1;
-    max-width: 140px; /* Ancho fijo para botones de toggle */
-}
-
-/* --- 10. Botones generales --- */
-.btn {
-    padding: 12px 25px; /* Más padding para botones */
-    border: none;
-    border-radius: 8px; /* Bordes más redondeados */
-    cursor: pointer;
+    width: 60px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--light-text);
     font-size: 1em;
-    font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* Espacio entre icono y texto */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra más pronunciada */
 }
 
-.btn.primary {
-    background-color: var(--accent-color);
-    color: white;
+/* youtubePlayerContainer si necesitas darle estilos específicos */
+#youtubePlayerContainer {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo para cuando el iframe carga */
 }
 
-.btn.primary:hover {
-    background-color: #218838; /* Tono más oscuro de verde */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
-.btn.secondary {
-    background-color:#f7e705a4
-    color white;
-}
-
-.btn.secondary:hover {
-    background-color: #1583d8; /* Tono más oscuro de gris */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
-.btn.danger { /* Nuevo estilo para el botón de Stop */
-    background-color: var(--danger-color);
-    color: white;
-}
-
-.btn.danger:hover {
-    background-color: #bb2d3b; /* Tono más oscuro de rojo */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
-.btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Input de texto */
-.input-text {
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 1em;
-    color: var(--text-color);
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.input-text:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* Iconos de Font Awesome */
-.fas, .fab {
-    margin-right: 5px; /* Espacio entre el icono y el texto */
-}
-
-/* --- 11. Ecualizador Gráfico --- */
-.equalizer-section {
-    background-color: #00040528; /* Un gris oscuro */
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 10px; /* Espacio sobre el ecualizador */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+/* --- Footer --- */
+.main-footer {
+    background: var(--dark-background);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 30px 20px;
     text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* CAMBIO CLAVE AQUÍ: Esto empuja el footer hacia abajo */
+    margin-top: auto; 
+    
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    width: 100%; /* Asegura que ocupe todo el ancho de su contenedor padre */
+    box-sizing: border-box;
 }
 
-.equalizer-section h2 {
-    color: #000000; /* Color de texto claro */
-    margin-bottom: 25px;
-    border-bottom-color: #066eec; /* Borde inferior más oscuro */
-}
-
-.equalizer-controls {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-end;
-    gap: 15px; /* Mayor espacio entre sliders */
-    flex-wrap: wrap;
-}
-
-.eq-band {
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30px; /* Ancho fijo para cada banda */
+    gap: 10px;
 }
 
-.eq-band label {
-    color: #000000;
+.main-footer p {
+    margin: 0;
     font-size: 0.9em;
-    margin-top: 8px; /* Espacio entre slider y label */
-    text-align: center;
-    width: 50%;
 }
 
-.eq-band input[type="range"] {
-    -webkit-appearance: slider-vertical;
-    writing-mode: bt-lr;
-    direction: rtl;
-    width: 25px; /* Ancho del slider */
-    height: 140px; /* Altura del slider */
-    background: #345e44; /* Fondo de la pista del slider */
-    border-radius: 8px;
-    outline: none;
-    transition: background-color .2s;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+.gemini-credit {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
-.eq-band input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 28px; /* Ancho del "pulgar" */
-    height: 18px; /* Altura del "pulgar" */
-    background: #c1d600; /* Color del pulgar */
-    cursor: pointer;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    transition: background-color 0.2s ease;
-}
-.eq-band input[type="range"]::-webkit-slider-thumb:hover {
-    background: #ec2501;
+.social-links {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
 }
 
-.eq-band input[type="range"]::-moz-range-thumb {
-    width: 28px;
-    height: 18px;
-    background: #3498db;
-    cursor: pointer;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    transition: background-color 0.2s ease;
-}
-.eq-band input[type="range"]::-moz-range-thumb:hover {
-    background: #2980b9;
+.social-links a {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5em;
+    transition: color var(--transition-speed), transform var(--transition-speed);
 }
 
-
-.eq-reset-btn {
-    margin-top: 25px;
-    background-color: #f104048e; /* Naranja */
-    color: rgb(252, 252, 252);
+.social-links a:hover {
+    color: var(--secondary-color);
+    transform: translateY(-3px);
 }
 
-.eq-reset-btn:hover {
-    background-color: #f07000; /* Naranja más oscuro */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
-/* --- 12. Media Queries para diseño responsivo --- */
+/* --- Responsive Design --- */
 @media (max-width: 992px) {
     .radio-main {
-        grid-template-columns: 1fr; /* Una sola columna en tabletas y móviles */
+        grid-template-columns: 1fr; /* Una sola columna en pantallas medianas y pequeñas */
     }
 
-    .player-section,
-    .playlist-section,
-    .ads-time-section,
-    .equalizer-section {
-        grid-column: 1 / -1; /* Ocupa todo el ancho */
-        margin-top: 20px; /* Ajuste de margen para pantallas más pequeñas */
+    .radio-container {
+        padding: 15px;
     }
 
-    .radio-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        text-align: center;
-    }
     .radio-header h1 {
         font-size: 2em;
-        width: 100%;
-        justify-content: center; /* Centrar el título y el icono */
     }
-    .radio-header .current-time {
-        width: 100%;
-        text-align: center;
-        font-size: 1.1em;
+
+    .current-time {
+        font-size: 1.2em;
     }
-    .scrolling-banner {
-        font-size: 1em;
+
+    .btn {
+        width: calc(50% - 10px); /* Dos botones por fila */
+        justify-content: center;
     }
 }
 
@@ -677,74 +576,33 @@ section h2 {
     body {
         padding: 10px;
     }
-    .radio-container {
-        padding: 15px;
-        margin: 10px;
+
+    .radio-header h1 {
+        font-size: 1.8em;
     }
-    section {
-        padding: 15px;
+
+    .current-time {
+        font-size: 1em;
     }
-    section h2 {
-        font-size: 1.5em;
+
+    .scrolling-text {
+        font-size: 0.9em;
     }
-    .player-display {
-        padding: 15px;
+
+    .btn {
+        width: 100%; /* Un botón por fila en pantallas muy pequeñas */
     }
-    #nowPlaying {
-        font-size: 1.4em;
-    }
-    .controls {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .controls .btn {
-        width: 100%;
-        max-width: none;
-        padding: 10px 15px;
-        font-size: 0.95em;
-    }
-    .volume-control input[type="range"] {
-        width: 100px; /* Ajuste para móviles */
-    }
-    .playlist-controls {
-        flex-direction: column;
-    }
-    .playlist-controls .btn,
-    .playlist-controls .input-text {
-        width: 100%;
-        max-width: none;
-        padding: 10px;
-    }
-    .playlist-items li {
-        padding: 10px;
-    }
-    .ads-time-section h3 {
-        font-size: 1.2em;
-    }
-    .ad-settings, .time-settings {
+
+    .volume-control, .ad-settings, .time-settings {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
     }
-    .ad-settings label, .time-settings label {
+
+    .volume-control input[type="range"] {
         width: 100%;
-        text-align: left;
     }
-    .ad-settings input[type="number"], .time-settings input[type="number"] {
-        width: 100%;
-        max-width: none;
-    }
-    .ad-settings .btn, .time-settings .btn {
-        width: 100%;
-        max-width: none;
-    }
-    .equalizer-controls {
-        gap: 5px; /* Menor espacio entre sliders en pantallas pequeñas */
-    }
-    .eq-band {
-        width: 50px;
-    }
-    .eq-band input[type="range"] {
-        height: 100px;
+
+    .main-footer {
+        border-radius: 0; /* Elimina el borde redondeado inferior en móviles si el footer se "pega" */
     }
 }
