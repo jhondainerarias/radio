@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MI RADIO  - jhon dainer arias </title>
+    <title>MI RADIO - jhon dainer arias </title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
     <div class="radio-container">
-
-    <div class="scrolling-banner">
-        <div class="scrolling-text">
-            ¡sueñas con tener tu propia emisora de radio ! . ¡sin necesidad de programas, descargar archivos, facil y ligero ! aqui esta MI RADIO.. en tu navegador, la opcion mas eficiente, facil, y util, 
+        <div class="scrolling-banner">
+            <div class="scrolling-text">
+                ¡sueñas con tener tu propia emisora de radio ! . ¡sin necesidad de programas, descargar archivos, facil y ligero ! aqui esta MI RADIO.. en tu navegador, la opcion mas eficiente, facil, y util,
+            </div>
         </div>
-    </div>
 
         <header class="radio-header">
-            <h1>      MI RADIO   <i class="fas fa-broadcast-tower"></i></h1>
-                        <h1> jhon dainer arias    <i class="fas fa-broadcast-tower"></i></h1>
-
+            <h1>MI RADIO <i class="fas fa-broadcast-tower"></i></h1>
+            <h1>jhon dainer arias <i class="fas fa-broadcast-tower"></i></h1>
             <div class="current-time" id="currentTime"></div>
         </header>
 
@@ -39,13 +37,13 @@
                     <button id="nextBtn" class="btn"><i class="fas fa-forward"></i> Siguiente</button>
                     <button id="duckVolumeBtn" class="btn secondary"><i class="fas fa-volume-down"></i> pisador para Locutor</button>
                     <button id="mainStopBtn" class="btn danger"><i class="fas fa-stop"></i> Stop</button>
-                <div class="volume-control">
-                    <label for="mainVolume">Volumen:</label>
-                    <input type="range" id="mainVolume" min="0" max="1" step="0.01" value="0.8">
+                    <div class="volume-control">
+                        <label for="mainVolume">Volumen:</label>
+                        <input type="range" id="mainVolume" min="0" max="1" step="0.01" value="0.8">
+                    </div>
+                    <audio id="mainAudioPlayer"></audio>
+                    <div id="youtubePlayerContainer"></div>
                 </div>
-                <audio id="mainAudioPlayer"></audio>
-                <div id="youtubePlayerContainer"></div>
-            </section>
             </section>
 
             <section class="playlist-section">
@@ -60,22 +58,23 @@
                     <li class="placeholder-item">Añade música desde la memoria de tu dispositivo o videos de YouTube para empezar...</li>
                 </ul>
             </section>
-    </section> <section class="equalizer-section">
+            <section class="equalizer-section">
                 <h2>Ecualizador Gráfico</h2>
                 <div class="equalizer-controls" id="equalizerControls">
-                    </div>
+                </div>
             </section>
             <section class="admin-section">
                 <h2> Tu Publicidad y Hora</h2>
                 <div class="ad-controls">
                     <h3>Publicidad (Jingles/Spots ) tus comerciales y anuncios </h3>
                     <input type="file" id="adFileInput" accept="audio/*" multiple style="display: none;">
-                    <button id="addAdBtn" class="btn secondary"><i class="fas fa-ad"></i> Añadir tus cuñas   Publicitarias</button>
-                    <button id="playAdBtn" class="btn primary"><i class="fas fa-bullhorn"></i> Reproducir Ahora tus cuñas  publicitarias</button>
-                    <button id="stopAdBtn" class="btn secondary"><i class="fas fa-stop-circle"></i> Detener tu publicidad  </button>
+                    <button id="addAdBtn" class="btn secondary"><i class="fas fa-ad"></i> Añadir tus cuñas Publicitarias</button>
+                    <button id="playAdBtn" class="btn primary"><i class="fas fa-bullhorn"></i> Reproducir Ahora tus cuñas publicitarias</button>
+                    <button id="stopAdBtn" class="btn secondary"><i class="fas fa-stop-circle"></i> Detener tu publicidad</button>
                     <ul id="adList" class="ad-items">
-                         <li class="placeholder-item">Carga tus cuñas publicitarias...</li>
-                     <div class="ad-settings">
+                        <li class="placeholder-item">Carga tus cuñas publicitarias...</li>
+                    </ul>
+                    <div class="ad-settings">
                         <label for="adInterval">Auto Publicidad (min):</label>
                         <input type="number" id="adInterval" value="5" min="1">
                         <button id="toggleAutoAdBtn" class="btn secondary"><i class="fas fa-toggle-off"></i> Auto OFF</button>
@@ -91,11 +90,23 @@
                         <button id="toggleAutoTimeBtn" class="btn secondary"><i class="fas fa-toggle-off"></i> Auto OFF</button>
                     </div>
                 </div>
+            </section>
         </main>
-
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js"></script>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>© 2025 MI RADIO. Todos los derechos reservados.</p>
+            <p>Proyecto de Jhon Dainer Arias, impulsado con la asistencia de <span class="gemini-credit">Gemini 2.5 Flash</span>.</p>
+            <div class="social-links">
+                <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
